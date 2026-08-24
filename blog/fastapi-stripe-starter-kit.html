@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>We Found a Real Stripe SDK Bug Building Our Own SaaS. Here's the Fix, Pre-Built. | Side Lane Co</title>
+  <meta name="description" content="Auth and billing are the same boring problem in every SaaS. We already built it, already hit the bugs, and already fixed them. Skip straight to the product.">
+  <style>
+    :root { --teal: #2A5B5C; --cream: #FAF7F0; --ink: #1E2A2A; }
+    body { margin:0; background:var(--cream); color:var(--ink); font-family:-apple-system,"Segoe UI",Arial,sans-serif; line-height:1.6; }
+    header { background:var(--teal); color:var(--cream); padding:2rem 1.5rem; text-align:center; }
+    header a.home { color: var(--cream); text-decoration:none; font-weight:700; font-size:1.1rem; }
+    header h1 { margin:0.6rem 0 0; font-size:1.7rem; letter-spacing:0.01em; }
+    main { max-width:680px; margin:0 auto; padding:2.5rem 1.5rem 3rem; }
+    main p { font-size:1.05rem; }
+    main h2 { color:var(--teal); font-size:1.25rem; margin-top:2rem; }
+    .meta { opacity:0.7; font-size:0.9rem; margin-top:-0.5rem; }
+    .cta { display:inline-block; margin-top:1rem; padding:0.75rem 1.75rem; background:var(--teal); color:var(--cream); text-decoration:none; border-radius:6px; font-weight:600; }
+    footer { text-align:center; font-size:0.85rem; opacity:0.7; padding:1.5rem; }
+    footer a { color: var(--ink); }
+    a { color: var(--teal); }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="home" href="/">Side Lane Co</a>
+    <h1>We Found a Real Stripe SDK Bug Building Our Own SaaS. Here's the Fix, Pre-Built.</h1>
+  </header>
+  <main>
+    <p class="meta">Side Lane Co</p>
+
+    <p>Before you write a single line of the feature that actually makes your SaaS different, you have to build the part that makes it a SaaS at all: accounts, password hashing, a free tier that actually gates something, a paid tier that unlocks it, and Stripe wired up correctly on both ends. None of that is your product. All of it has to exist before your product can charge anyone a dollar.</p>
+
+    <h2>We didn't design this cold</h2>
+    <p>This scaffold isn't a tutorial project. It's the actual auth and billing layer we built for <a href="https://rehabrunway.onrender.com">RehabRunway</a>, a real SaaS with real Stripe billing live in production, pulled out and generalized so another developer doesn't have to rebuild the same boring 20% before they can start on their own 80%.</p>
+
+    <p>Along the way we hit a real bug: a breaking change in a newer version of the official <code>stripe-python</code> SDK where <code>StripeObject</code> stopped behaving like a dictionary, so the standard <code>.get()</code> pattern webhook handlers usually use just silently stopped working. Every webhook returned a 500. We found it from a real production traceback, not a guess, and fixed it with the SDK's actual supported method, <code>.to_dict()</code>. That fix is already in this kit. You don't have to lose the afternoon we lost finding it.</p>
+
+    <h2>What's actually in it</h2>
+    <p>Session-cookie auth with <code>bcrypt</code> password hashing, a free tier that genuinely blocks access past its limit instead of just displaying a banner, Stripe Checkout wired to a webhook that unlocks the paid tier the moment payment succeeds, and the subscription-cancellation path that locks it back down. Built on FastAPI. Tested end to end: register, hit the free-tier wall, check out, get unlocked, cancel, get locked out again.</p>
+
+    <h2>What it isn't</h2>
+    <p>Here's the honest part. This is a lean, single-tenant scaffold, not a fully-loaded platform. It doesn't have team accounts, OAuth login, or background job queues. If you need all of that out of the box, there are more expensive, more built-out commercial starter kits that include it. What this has is the one piece every one of those kits also needs and none of them can prove actually works in production, because this one already does.</p>
+
+    <p>The <a href="https://sidelane.gumroad.com/l/wtibb">FastAPI + Stripe SaaS Starter Kit</a> is a one-time purchase, full source, README included. Auth and billing, done and tested, so your first real week of building goes into the thing that makes your product yours.</p>
+
+    <p><a class="cta" href="https://sidelane.gumroad.com/l/wtibb">Get the starter kit</a></p>
+  </main>
+  <footer>
+    <a href="/blog/">More posts</a> &middot; <a href="/privacy/">Privacy Policy</a> &middot; <a href="mailto:sidelaneco@gmail.com">sidelaneco@gmail.com</a>
+  </footer>
+</body>
+</html>
